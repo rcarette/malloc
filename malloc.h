@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/28 04:17:04 by rcarette          #+#    #+#             */
-/*   Updated: 2017/10/28 15:03:04 by rcarette         ###   ########.fr       */
+/*   Updated: 2017/10/28 15:41:19 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define SMALL_PAGE 32
 # define SMALL_MAX_PAGE (SMALL_PAGE * 4096)
 # define SMALL 512
+
+# define IS_TINY ()
 
 typedef struct		s_meta
 {
