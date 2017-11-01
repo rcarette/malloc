@@ -29,26 +29,29 @@
 # define SMALL_MAX_PAGE (SMALL_PAGE * 4096)
 # define SMALL 512
 
-# define IS_TINY ()
-
 typedef struct		s_meta
 {
-	int				free; /* Libre || pas libre */
-	size_t			size; /* Taille octets */
+	int		free; /* Libre || pas libre */
+	size_t		size; /* Taille octets */
 	struct s_meta	*next;
-	void			*adress;
-}					t_meta;
+	void		*adress;
+}			t_meta;
+
 
 typedef struct		s_mem_control
 {
-	t_meta			*tiny;
-	t_meta			*small;
-	t_meta			*large;
-	void			*tiny_page;
-	void			*small_page;
-}					t_mem_control;
+	t_meta		*tiny;
+	t_meta		*small;
+	t_meta		*large;
+	void		*tiny_page;
+	void		*small_page;
+	int		size_small;
+	int		size_tiny;
+	t_meta		*last_pointer;
+}			t_mem_control;
 
-t_mem_control g_memory_control;
+t_mem_control g_mem;
 void	*malloc(size_t size);
 void	init_malloc();
+void	*manage_tiny(size_t size);
 #endif
