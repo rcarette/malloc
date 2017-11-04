@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/14 16:43:52 by rcarette          #+#    #+#             */
-/*   Updated: 2017/11/01 16:27:48 by rcarette         ###   ########.fr       */
+/*   Updated: 2017/11/04 13:28:38 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,31 +59,34 @@ static void	*add_block(size_t size)
 
 void	*manage_tiny(size_t size)
 {
-	t_meta	*tmp;
+	return(NULL);
+}
 
-	if (!g_mem.nbr_tiny && !g_mem.tiny)
-	{
-		new_allocate(TINY_MAX_PAGE);
-		return(add_block(size));
-	}
-	tmp = g_mem.tiny_page; // tmp pointe sur la page 'tiny_page'
-	while (tmp->next)
-	{
-		// si on trouve des block free !
-		tmp = tmp->next;
-	}
-	return(add_block(size));
+int		init_malloc()
+{
+	write(1, "DEBUG: INIT_MALLOC...\n", 22);
+	/*
+	 * initialize les variables ci-dessous VALEUR (NULL)
+	 */
+	g_mem.tiny = NULL;
+	g_mem.small = NULL;
+	g_mem.large = NULL;
+	g_mem.nbr_tiny= 0x0;
+	return (1);
 }
 
 
 void	*ft_malloc(size_t size)
 {
+	static int	init = 0;
+
 	if (!size)
 		return (NULL);
+	else if (!init)
+		init += init_malloc();
 	else if (size <= (TINY - sizeof(t_meta)))
 	{
 		ft_putstr("BLOCK MEMOIRE TINY\n");
-		printf("%d\n", size);
 		return (manage_tiny(size));
 	}
 	return (NULL);
@@ -91,33 +94,7 @@ void	*ft_malloc(size_t size)
 
 int main(void)
 {
-	int	i = 0;
-	char	*ptr;
-	t_meta *tmp;
-
-	tmp = g_mem.tiny;
-	while (i < 256)
-	{
-		printf("nbr tiny: %d\n", g_mem.nbr_tiny);
-		ptr = ft_malloc(i + 1);
-		i++;
-		sleep(1);
-	}
-	while (tmp)
-	{
-		printf("size: %ld\n", tmp->size);
-		printf("free: %ld\n", tmp->free);
-		printf("%p\n", tmp->adress);
-		printf("%ld\n", g_mem.nbr_tiny);
-		tmp = tmp->next;
-		(!tmp) ? 0 : printf("\n\n");
-		sleep(1);
-
-	}
-	/*printf("%p\n", g_mem.tiny->adress);
-	printf("size: %ld\n", g_mem.tiny->size);
-	printf("free: %ld\n", g_mem.tiny->free);
-	printf("nbr tiny: %d\n", g_mem.nbr_tiny);*/
-
+	ft_malloc(7);
+	ft_malloc(8);
 	return (0);
 }

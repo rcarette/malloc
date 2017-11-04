@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/28 04:17:04 by rcarette          #+#    #+#             */
-/*   Updated: 2017/11/01 14:48:36 by rcarette         ###   ########.fr       */
+/*   Updated: 2017/11/04 13:24:06 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ enum e_token
 
 typedef struct		s_meta
 {
-	int		free; /* Libre || pas libre */
+	int			free; /* Libre || pas libre */
 	size_t		size; /* Taille octets */
-	struct s_meta	*next;
+	struct		s_meta	*next;
 	void		*adress;
-}			t_meta;
+}					t_meta;
 
 
 typedef struct	s_mem_control
@@ -61,8 +61,8 @@ typedef struct	s_mem_control
 }				t_mem_control;
 
 t_mem_control g_mem;
-void			*malloc(size_t size);
-void			init_malloc();
+void			*ft_malloc(size_t size);
+int				init_malloc();
 void			*manage_tiny(size_t size);
 t_meta			*start_search_mem(enum e_token value);
 #endif
