@@ -43,27 +43,21 @@ enum e_token
 
 typedef struct		s_meta
 {
-	int				free; /* Libre || pas libre */
-	size_t			size; /* Taille octets */
+	int		free; /* Libre || pas libre */
+	size_t		size; /* Taille octets */
 	struct s_meta	*next;
-	void			*adress;
-}					t_meta;
+	void		*adress;
+}			t_meta;
 
 
 typedef struct	s_mem_control
 {
 	t_meta		*tiny;
-	t_meta		*disp_tiny;
 	t_meta		*small;
-	t_meta		*disp_small;
 	t_meta		*large;
-	t_meta		*disp_large;
 	void		*tiny_page;
 	void		*small_page;
-	size_t		size_small;
-	size_t		size_tiny;
-	size_t		size_large;
-	t_meta		*last_pointer;
+	int		nbr_tiny;
 }				t_mem_control;
 
 t_mem_control g_mem;
