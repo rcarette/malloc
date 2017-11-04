@@ -68,7 +68,7 @@ void	*manage_tiny(size_t size)
 						PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 		g_mem.nbr_tiny = 0;
 	}
-	new_blk = (t_meta *)g_mem.tiny_page + (g_mem.nbr_tiny * TINY);
+	new_blk = g_mem.tiny_page + (g_mem.nbr_tiny * TINY);
 	new_blk->next = NULL;
 	new_blk->free = 0x1;
 	new_blk->size = size;
@@ -122,13 +122,23 @@ void	*ft_malloc(size_t size)
 
 int main(void)
 {
-	char *ptr = ft_malloc(7);
-	char *ptr1 = ft_malloc(14);
-	char *ptr2 = ft_malloc(60);
+	int i = 0;
+	char	*ptr;
+	while (i < 256)
+	{
+		ptr = ft_malloc(7);
+		strcpy(ptr, "Romain");
+		i++;
+	}
 	while (g_mem.tiny)
 	{
 		printf("Size: %ld\n", g_mem.tiny->size);
+		printf("Size: %p\n", g_mem.tiny->adress);
+		printf("Size: %s\n", (char *)g_mem.tiny->adress);
+		printf("Size: %d\n", g_mem.nbr_tiny);
+		printf("\n\n");
 		g_mem.tiny = g_mem.tiny->next;
 	}
+
 	return (0);
 }
