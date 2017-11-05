@@ -57,6 +57,7 @@ typedef struct	s_mem_control
 	t_meta		*large;
 	void		*tiny_page;
 	void		*small_page;
+	t_meta		*tiny_free;
 	int		nbr_tiny;
 }				t_mem_control;
 
@@ -65,4 +66,6 @@ void			*ft_malloc(size_t size);
 int				init_malloc();
 void			*manage_tiny(size_t size);
 t_meta			*start_search_mem(enum e_token value);
+void			*search_block(enum e_token value);
+void			ft_free(void *ptr);
 #endif
