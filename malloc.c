@@ -73,8 +73,8 @@ void	*manage_tiny(size_t size)
 	new_blk->free = 0x1;
 	new_blk->size = size;
 	new_blk->adress = g_mem.tiny_page + (g_mem.nbr_tiny * TINY) + sizeof(t_meta) + 1;
-	/*if (search_block(TINY))
-		return (new_blk->adress);*/
+	if (search_block(TINY, size))
+		return (new_blk->adress);
 	if (!g_mem.tiny)
 		g_mem.tiny = new_blk;
 	else
@@ -132,66 +132,13 @@ void	*ft_malloc(size_t size)
 
 int main(void)
 {
-	char	*ptr = ft_malloc(7);
-	char	*ptr1 = ft_malloc(14);
-	char	*ptr2 = ft_malloc(56);
-	char	*ptr3 = ft_malloc(33);
-	char	*ptr4 = ft_malloc(21);
-	char	*ptr5 = ft_malloc(90);
-	t_meta	*tmp;
-	tmp = g_mem.tiny;
-	tmp = g_mem.tiny;
-
-	printf("APRES LES MALLOC AFFICHAGE DU G_MEM.TINY\n");
-	while (tmp)
-	{
-		printf("%ld -- %p\n", tmp->size, tmp->adress);
-		tmp = tmp->next;
-	}
-	printf("\n\n");
-	ft_free(ptr);
-	ft_free(ptr1);
-	ft_free(ptr5);
-	ft_free(ptr3);
-	ft_free(ptr4);
-	ft_free(ptr2);
-	printf("\n");
-	printf("G_MEM.TINY APRES LES FREE\n");
-	ptr = ft_malloc(12);
-	ft_free(ptr);
-	ptr = ft_malloc(18);
-	ft_free(ptr);
-	ptr = ft_malloc(21);
-	ft_free(ptr);
-	tmp = g_mem.tiny;
-	while (tmp)
-	{
-		printf("%ld -- %p\n", tmp->size, tmp->adress);
-		tmp = tmp->next;
-	}
-
-	printf("\n");
-	printf("LISTE FREE\n\n");
-	tmp = g_mem.tiny_free;
-	while (tmp)
-	{
-		printf("%ld\n", tmp->size);
-		tmp = tmp->next;
-	}
-	printf("remalloc\n");
-	tmp = g_mem.tiny;
-	ptr = ft_malloc(5);
-	ft_free(ptr);
-	ptr = ft_malloc(5);
-	strcpy(ptr, "Rom");
-
-	tmp = g_mem.tiny;
-	printf("liste occupee\n");
-	while (tmp)
-	{
-		printf("%ld\n", tmp->size);
-		printf("%s\n", (char *)tmp->adress);
-		tmp = tmp->next;
-	}
+	int	*t = ft_malloc(sizeof(int) * 5);
+	t[0] = 14;
+	t[1] = 4;
+	t[2] = 78;
+	t[3] = 47;
+	t[4] = 31;
+	for(int i = 0; i < 5; i++)
+		printf("%d\n", t[i]);
 	return (0);
 }

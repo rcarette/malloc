@@ -66,6 +66,6 @@ void			*ft_malloc(size_t size);
 int				init_malloc();
 void			*manage_tiny(size_t size);
 t_meta			*start_search_mem(enum e_token value);
-void			*search_block(enum e_token value);
+void			*search_block(enum e_token value, size_t size);
 void			ft_free(void *ptr);
 #endif
