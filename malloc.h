@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/types.h>
+#include <signal.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <err.h>
@@ -58,6 +59,8 @@ typedef struct	s_mem_control
 	void		*tiny_page;
 	void		*small_page;
 	t_meta		*tiny_free;
+	t_meta		*small_free;
+	t_meta		*large_free;
 	int		nbr_tiny;
 }				t_mem_control;
 
@@ -68,4 +71,5 @@ void			*manage_tiny(size_t size);
 t_meta			*start_search_mem(enum e_token value);
 void			*search_block(enum e_token value, size_t size);
 void			ft_free(void *ptr);
+void	show(t_meta *l);
 #endif

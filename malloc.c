@@ -51,7 +51,6 @@ static void	*add_block(size_t size)
 	}
 	else if(!g_mem.nbr_tiny)
 		g_mem.tiny = block;
-	++g_mem.nbr_tiny;
 	return (block->adress);
 }
 
@@ -68,13 +67,13 @@ void	*manage_tiny(size_t size)
 						PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 		g_mem.nbr_tiny = 0;
 	}
+	if ((new_blk = search_block(TINY, size)))
+		return (new_blk);
 	new_blk = g_mem.tiny_page + (g_mem.nbr_tiny * TINY);
 	new_blk->next = NULL;
 	new_blk->free = 0x1;
 	new_blk->size = size;
 	new_blk->adress = g_mem.tiny_page + (g_mem.nbr_tiny * TINY) + sizeof(t_meta) + 1;
-	if (search_block(TINY, size))
-		return (new_blk->adress);
 	if (!g_mem.tiny)
 		g_mem.tiny = new_blk;
 	else
@@ -110,6 +109,8 @@ int		init_malloc()
 	g_mem.tiny_page = NULL;
 	g_mem.small_page = NULL;
 	g_mem.tiny_free = NULL;
+	g_mem.small_free = NULL;
+	g_mem.large_free = NULL;
 	return (1);
 }
 
@@ -128,17 +129,4 @@ void	*ft_malloc(size_t size)
 		return (manage_tiny(size));
 	}
 	return (NULL);
-}
-
-int main(void)
-{
-	int	*t = ft_malloc(sizeof(int) * 5);
-	t[0] = 14;
-	t[1] = 4;
-	t[2] = 78;
-	t[3] = 47;
-	t[4] = 31;
-	for(int i = 0; i < 5; i++)
-		printf("%d\n", t[i]);
-	return (0);
 }
