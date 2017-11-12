@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/14 16:43:52 by rcarette          #+#    #+#             */
-/*   Updated: 2017/11/04 14:36:24 by rcarette         ###   ########.fr       */
+/*   Updated: 2017/11/12 16:17:57 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,10 @@
 
 #include "malloc.h"
 
-void	ft_putstr(char *str)
+void	*new_allocate(size_t value)
 {
-	write(1, str, strlen(str));
-}
-
-void	new_allocate(enum e_token value)
-{
-	ft_putstr("toto\n");
-	g_mem.tiny_page = mmap(0, value, \
-					PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+	return (mmap(0, value, \
+					PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0));
 }
 
 static void	*add_block(size_t size)
@@ -43,7 +37,6 @@ static void	*add_block(size_t size)
 			(g_mem.nbr_tiny * 128) + sizeof(t_meta) + 1;
 	if (g_mem.tiny->next != NULL)
 	{
-		ft_putstr("***CHAINAGE***\n");
 		tmp = g_mem.tiny;
 		while (tmp->next)
 			tmp = tmp->next;
@@ -62,9 +55,7 @@ void	*manage_tiny(size_t size)
 	blk = g_mem.tiny;
 	if (!g_mem.tiny_page)
 	{
-		ft_putstr("Manage tiny: g_mem.tiny_page == NULL\n");
-		g_mem.tiny_page = mmap(0, TINY_MAX_PAGE, \
-						PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+		g_mem.tiny_page = new_allocate(TINY_MAX_PAGE);
 		g_mem.nbr_tiny = 0;
 	}
 	if ((new_blk = search_block(TINY, size)))
@@ -78,34 +69,37 @@ void	*manage_tiny(size_t size)
 		g_mem.tiny = new_blk;
 	else
 	{
-		ft_putstr("CHAINAGE\n");
 		while (blk->next)
 			blk = blk->next;
 		blk->next = new_blk;
 	}
-	++g_mem.nbr_tiny; // + 1 TINY CREAT BLOCK ;*/
+	++g_mem.nbr_tiny;
 	if (g_mem.nbr_tiny % 256 == 0)
-	{
-		/* VERIF ICI PAS SUR DE LA FIABILITE DE CE MORCEAU DE CODE */
-		ft_putstr("Appel de MMAP \n");
 		g_mem.tiny_page = NULL;
-		sleep(10);
-	}
 	return (new_blk->adress);
+}
+
+
+void	*manage_small(size_t size)
+{
+
+	return (NULL);
+}
+
+void	*manage_large(size_t size)
+{
+	return (NULL);
 }
 
 int		init_malloc()
 {
-	/*
-	 * initialize les variables ci-dessous VALEUR (NULL)
-	 *
-	 */
 	g_mem.tiny = NULL;
-	write(1, "DEBUG: INIT_MALLOC...\n", 22);
 	g_mem.tiny = NULL;
 	g_mem.small = NULL;
 	g_mem.large = NULL;
 	g_mem.nbr_tiny= 0x0;
+	g_mem.nbr_small= 0x0;
+	g_mem.nbr_large= 0x0;
 	g_mem.tiny_page = NULL;
 	g_mem.small_page = NULL;
 	g_mem.tiny_free = NULL;
@@ -124,9 +118,10 @@ void	*ft_malloc(size_t size)
 	else if (!init)
 		init += init_malloc();
 	if (size <= (TINY - sizeof(t_meta)))
-	{
-		ft_putstr("BLOCK MEMOIRE TINY\n");
 		return (manage_tiny(size));
-	}
+	else if (size <= (SMALL - sizeof(t_meta)))
+		return (manage_small(size));
+	else
+		return (manage_large(size));
 	return (NULL);
 }

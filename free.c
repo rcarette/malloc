@@ -1,26 +1,17 @@
 #include "malloc.h"
 
-static void	add_link(t_meta *block, t_meta *lst_dst)
-{
-}
-
-static void	*search_pointor(void *ptr, t_meta *tmp)
+static void		*search_pointor(void *ptr, t_meta *tmp)
 {
 	while (tmp)
 	{
 		if (!((size_t)ptr ^ (size_t)tmp->adress))
-		{
-			printf("%p - %p\n", ptr, tmp->adress);
-			printf("TROUVER \n");
-			sleep(5);
 			return (tmp->adress);
-		}
 		tmp = tmp->next;
 	}
 	return (NULL);
 }
 
-static void	ctrol_memory(void *ptr)
+static void		ctrol_memory(void *ptr)
 {
 	if (search_pointor(ptr, g_mem.tiny_free) || search_pointor(ptr, g_mem.small_free) \
 							|| search_pointor(ptr, g_mem.large_free))
@@ -31,7 +22,25 @@ static void	ctrol_memory(void *ptr)
 	}
 }
 
-static int	manage_free(void *ptr, t_meta **lst_src, t_meta **lst_dst)
+
+
+
+
+static void		add_link(t_meta *block, t_meta **lst_dst)
+{
+	t_meta	*tmp;
+
+	tmp = *lst_dst;
+	if (!*lst_dst)
+		(*lst_dst) = block;
+	else
+	{
+		block->next = *lst_dst;
+		*lst_dst = block;
+	}
+}
+
+static int		manage_free(void *ptr, t_meta **lst_src, t_meta **lst_dst)
 {
 	t_meta	*tmp;
 	t_meta	*prev;
@@ -47,6 +56,7 @@ static int	manage_free(void *ptr, t_meta **lst_src, t_meta **lst_dst)
 			else
 				prev->next = (tmp->next != NULL) ? tmp->next : NULL;
 			tmp->next = NULL;
+			add_link(tmp, lst_dst);
 			return (0);
 		}
 		prev = tmp;
@@ -55,37 +65,20 @@ static int	manage_free(void *ptr, t_meta **lst_src, t_meta **lst_dst)
 	return (1);
 }
 
-void		ft_free(void *ptr)
+void			ft_free(void *ptr)
 {
 	t_meta	*tmp;
 
 	tmp = NULL;
-	if (!ptr) // SI LE PARAMTER RECU EST NULL 
+
+	if (!ptr)
 		return ;
-	ctrol_memory(ptr); // CETTE FONCTION PEUT STOPPER LE PROGRAMME SI JAMAIS LE PTR RECU EN PARAMETRE A DEJA ETAIT FREE !!!
+	ctrol_memory(ptr);
 	if (!manage_free(ptr, &g_mem.tiny, &g_mem.tiny_free))
 		return ;
-	/*t_meta	*block;
-	t_meta	*prev;
-
-	prev = NULL;
-	if (g_mem.tiny != NULL)
-	{
-		block = g_mem.tiny;
-		while (block)
-		{
-			if ((size_t)block->adress == (size_t)ptr)
-			{
-				if ((size_t)g_mem.tiny  == (size_t)block)
-					g_mem.tiny = (g_mem.tiny->next) ? g_mem.tiny->next : NULL;
-				else
-					prev->next = (block->next != NULL) ? block->next : NULL;
-				block->next = NULL;
-				add_lst_free(block);
-			}
-			prev = block;
-			block = block->next;
-		}
-	}*/
-		
+	else if (!manage_free(ptr, &g_mem.small, &g_mem.small_free))
+		return ;
+	else if (!manage_free(ptr, &g_mem.large, &g_mem.large_free))
+		return ;
+	return ;
 }

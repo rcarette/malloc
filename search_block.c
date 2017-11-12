@@ -1,36 +1,27 @@
 #include "malloc.h"
 
-static void	*transfer_tiny(size_t size)
+static void		*transfer(size_t size, t_meta **lst_src, t_meta **lst_dst)
 {
-
 	t_meta	*tmp;
-	t_meta	*tmp_tiny;
 
-	if (!g_mem.tiny_free)
+	tmp = *lst_src;
+
+	if (!*lst_src)
 		return (NULL);
-	tmp = g_mem.tiny_free;
-	tmp_tiny = g_mem.tiny;
-	tmp->next = NULL;
+	*lst_src = ((*lst_src)->next) ? (*lst_src)->next : NULL;
+	tmp->next = *lst_dst;
 	tmp->size = size;
-	g_mem.tiny_free = (g_mem.tiny_free->next) ? g_mem.tiny_free->next : NULL;
-	if (!tmp_tiny)
-		g_mem.tiny = tmp;
-	tmp->next = g_mem.tiny;
-	g_mem.tiny = tmp;
-	return (g_mem.tiny->adress);
+	*lst_dst = tmp;
+	return ((*lst_dst)->adress);
 }
 
 void	*search_block(enum e_token value, size_t size)
 {
 	if (value == TINY)
-		return(transfer_tiny(size));
+		return(transfer(size, &g_mem.tiny_free, &g_mem.tiny));
 	else if (value == SMALL)
-	{
-
-	}
+		return(transfer(size, &g_mem.small_free, &g_mem.small));
 	else
-	{
-	
-	}
+		return(transfer(size, &g_mem.large_free, &g_mem.large));
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/28 04:17:04 by rcarette          #+#    #+#             */
-/*   Updated: 2017/11/04 13:24:06 by rcarette         ###   ########.fr       */
+/*   Updated: 2017/11/12 16:11:29 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,9 @@ typedef struct	s_mem_control
 	t_meta		*tiny_free;
 	t_meta		*small_free;
 	t_meta		*large_free;
-	int		nbr_tiny;
+	int			nbr_tiny;
+	int			nbr_small;
+	int			nbr_large;
 }				t_mem_control;
 
 t_mem_control g_mem;
